@@ -1,168 +1,264 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<title>Sean Marr -&nbsp;Digital Artist - Electronic Arts</title>
 
-    <title>Custom Three.js Effect</title>
-    
-    <script src="bower_components/jquery/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="bower_components/threejs/build/three.js" type="text/javascript" charset="utf-8"></script>
-    <script src="bower_components/odometer/odometer.js" type="text/javascript" charset="utf-8"></script>
-    <script src="Exit.js" type="text/javascript" charset="utf-8"></script>
-    <style type="text/css" media="screen">
-         
-        @import url("http://fonts.googleapis.com/css?family=Arimo");
-        .odometer.odometer-auto-theme, .odometer.odometer-theme-car {
-          display: -moz-inline-box;
-          -moz-box-orient: vertical;
-          display: inline-block;
-          vertical-align: middle;
-          *vertical-align: auto;
-          position: relative;
-        }
-        .odometer.odometer-auto-theme, .odometer.odometer-theme-car {
-          *display: inline;
-        }
-        .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-car .odometer-digit {
-          display: -moz-inline-box;
-          -moz-box-orient: vertical;
-          display: inline-block;
-          vertical-align: middle;
-          *vertical-align: auto;
-          position: relative;
-        }
-        .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-car .odometer-digit {
-          *display: inline;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-car .odometer-digit .odometer-digit-spacer {
-          display: -moz-inline-box;
-          -moz-box-orient: vertical;
-          display: inline-block;
-          vertical-align: middle;
-          *vertical-align: auto;
-          visibility: hidden;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-digit-spacer, .odometer.odometer-theme-car .odometer-digit .odometer-digit-spacer {
-          *display: inline;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-car .odometer-digit .odometer-digit-inner {
-          text-align: left;
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          overflow: hidden;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon, .odometer.odometer-theme-car .odometer-digit .odometer-ribbon {
-          display: block;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-ribbon-inner, .odometer.odometer-theme-car .odometer-digit .odometer-ribbon-inner {
-          display: block;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-value, .odometer.odometer-theme-car .odometer-digit .odometer-value {
-          display: block;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-value.odometer-last-value, .odometer.odometer-theme-car .odometer-digit .odometer-value.odometer-last-value {
-          position: absolute;
-        }
-        .odometer.odometer-auto-theme.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-up .odometer-ribbon-inner {
-          -webkit-transition: -webkit-transform 2s;
-          -moz-transition: -moz-transform 2s;
-          -ms-transition: -ms-transform 2s;
-          -o-transition: -o-transform 2s;
-          transition: transform 2s;
-        }
-        .odometer.odometer-auto-theme.odometer-animating-up.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-up.odometer-animating .odometer-ribbon-inner {
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
-          transform: translateY(-100%);
-        }
-        .odometer.odometer-auto-theme.odometer-animating-down .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-down .odometer-ribbon-inner {
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
-          transform: translateY(-100%);
-        }
-        .odometer.odometer-auto-theme.odometer-animating-down.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-down.odometer-animating .odometer-ribbon-inner {
-          -webkit-transition: -webkit-transform 2s;
-          -moz-transition: -moz-transform 2s;
-          -ms-transition: -ms-transform 2s;
-          -o-transition: -o-transform 2s;
-          -o-transition: -o-transform 2s;
-          transition: transform 2s;
-          -webkit-transform: translateY(0);
-          -moz-transform: translateY(0);
-          -ms-transform: translateY(0);
-          -o-transform: translateY(0);
-          transform: translateY(0);
-        }
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-        .odometer.odometer-auto-theme, .odometer.odometer-theme-car {
-          -moz-border-radius: 0.34em;
-          -webkit-border-radius: 0.34em;
-          -o-border-radius: 0.34em;
-          -ms-border-radius: 0.34em;
-          -khtml-border-radius: 0.34em;
-          border-radius: 0.34em;
-          font-family: "Arimo", monospace;
-          padding: 0.15em;
-          background: black;
-          color: #eee0d3;
-        }
-        .odometer.odometer-auto-theme .odometer-digit, .odometer.odometer-theme-car .odometer-digit {
-          -moz-box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.8);
-          -webkit-box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.8);
-          -o-box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.8);
-          box-shadow: inset 0 0 0.3em rgba(0, 0, 0, 0.8);
-          background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #333333), color-stop(40%, #333333), color-stop(60%, #101010), color-stop(80%, #333333), color-stop(100%, #333333));
-          background-image: -webkit-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%);
-          background-image: -moz-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%);
-          background-image: -o-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%);
-          background-image: -ms-linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%);
-          background-image: linear-gradient(top, #333333 0%, #333333 40%, #101010 60%, #333333 80%, #333333 100%);
-          padding: 0 0.15em;
-        }
-        .odometer.odometer-auto-theme .odometer-digit:first-child, .odometer.odometer-theme-car .odometer-digit:first-child {
-          -moz-border-radius: 0.2em 0 0 0.2em;
-          -webkit-border-radius: 0.2em 0 0 0.2em;
-          -o-border-radius: 0.2em 0 0 0.2em;
-          -ms-border-radius: 0.2em 0 0 0.2em;
-          -khtml-border-radius: 0.2em 0 0 0.2em;
-          border-radius: 0.2em 0 0 0.2em;
-        }
-        .odometer.odometer-auto-theme .odometer-digit:last-child, .odometer.odometer-theme-car .odometer-digit:last-child {
-          -moz-border-radius: 0 0.2em 0.2em 0;
-          -webkit-border-radius: 0 0.2em 0.2em 0;
-          -o-border-radius: 0 0.2em 0.2em 0;
-          -ms-border-radius: 0 0.2em 0.2em 0;
-          -khtml-border-radius: 0 0.2em 0.2em 0;
-          border-radius: 0 0.2em 0.2em 0;
-          background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eee0d3), color-stop(40%, #eee0d3), color-stop(60%, #bbaa9a), color-stop(80%, #eee0d3), color-stop(100%, #eee0d3));
-          background-image: -webkit-linear-gradient(top, #eee0d3 0%, #eee0d3 40%, #bbaa9a 60%, #eee0d3 80%, #eee0d3 100%);
-          background-image: -moz-linear-gradient(top, #eee0d3 0%, #eee0d3 40%, #bbaa9a 60%, #eee0d3 80%, #eee0d3 100%);
-          background-image: -o-linear-gradient(top, #eee0d3 0%, #eee0d3 40%, #bbaa9a 60%, #eee0d3 80%, #eee0d3 100%);
-          background-image: -ms-linear-gradient(top, #eee0d3 0%, #eee0d3 40%, #bbaa9a 60%, #eee0d3 80%, #eee0d3 100%);
-          background-image: linear-gradient(top, #eee0d3 0%, #eee0d3 40%, #bbaa9a 60%, #eee0d3 80%, #eee0d3 100%);
-          background-color: #eee0d3;
-          color: black;
-        }
-        .odometer.odometer-auto-theme .odometer-digit .odometer-digit-inner, .odometer.odometer-theme-car .odometer-digit .odometer-digit-inner {
-          left: 0.15em;
-        }
-        .odometer.odometer-auto-theme.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-auto-theme.odometer-animating-down.odometer-animating .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-up .odometer-ribbon-inner, .odometer.odometer-theme-car.odometer-animating-down.odometer-animating .odometer-ribbon-inner {
-          -webkit-transition-timing-function: linear;
-          -moz-transition-timing-function: linear;
-          -ms-transition-timing-function: linear;
-          -o-transition-timing-function: linear;
-          transition-timing-function: linear;
-        }
-    </style>
+<link rel="stylesheet" href="http://cdn2.editmysite.com/css/sites.css?buildTime=1383960324" type="text/css" /><link rel='stylesheet' type='text/css' href='http://cdn1.editmysite.com/editor/libraries/fancybox/fancybox.css?1383960324' />
+<link rel='stylesheet' type='text/css' href='files/main_style.css?1384038934' title='wsite-theme-css' />
+<style type='text/css'>
+.wsite-elements.wsite-not-footer div.paragraph, .wsite-elements.wsite-not-footer p, .wsite-elements.wsite-not-footer .product-block .product-title, .wsite-elements.wsite-not-footer .product-description, .wsite-elements.wsite-not-footer .wsite-form-field label, .wsite-elements.wsite-not-footer .wsite-form-field label, #wsite-content div.paragraph, #wsite-content p, #wsite-content .product-block .product-title, #wsite-content .product-description, #wsite-content .wsite-form-field label, #wsite-content .wsite-form-field label, .blog-sidebar div.paragraph, .blog-sidebar p, .blog-sidebar .wsite-form-field label, .blog-sidebar .wsite-form-field label {}
+#wsite-content div.paragraph, #wsite-content p, #wsite-content .product-block .product-title, #wsite-content .product-description, #wsite-content .wsite-form-field label, #wsite-content .wsite-form-field label, .blog-sidebar div.paragraph, .blog-sidebar p, .blog-sidebar .wsite-form-field label, .blog-sidebar .wsite-form-field label {}
+.wsite-elements.wsite-footer div.paragraph, .wsite-elements.wsite-footer p, .wsite-elements.wsite-footer .product-block .product-title, .wsite-elements.wsite-footer .product-description, .wsite-elements.wsite-footer .wsite-form-field label, .wsite-elements.wsite-footer .wsite-form-field label{}
+.wsite-elements.wsite-not-footer h2, .wsite-elements.wsite-not-footer .product-long .product-title, .wsite-elements.wsite-not-footer .product-large .product-title, .wsite-elements.wsite-not-footer .product-small .product-title, #wsite-content h2, #wsite-content .product-long .product-title, #wsite-content .product-large .product-title, #wsite-content .product-small .product-title, .blog-sidebar h2 {}
+#wsite-content h2, #wsite-content .product-long .product-title, #wsite-content .product-large .product-title, #wsite-content .product-small .product-title, .blog-sidebar h2 {}
+.wsite-elements.wsite-footer h2, .wsite-elements.wsite-footer .product-long .product-title, .wsite-elements.wsite-footer .product-large .product-title, .wsite-elements.wsite-footer .product-small .product-title{}
+#wsite-title {}
+.wsite-menu-default a {}
+.wsite-menu a {}
+.wsite-elements .wsite-image div, .wsite-elements .wsite-caption {}
+.wsite-elements .galleryCaptionInnerText {}
+.fancybox-title {}
+.wsite-elements .wslide-caption {}
+.wsite-phone {}
+#bannerright h2 .wsite-text {}
+#bannerright p .wsite-text {}
+.wsite-button-inner {}
+#content blockquote {}
+.wsite-footer blockquote {}
+.blog-header h2 a {}
+</style>
+
+<style type='text/css'>
+.wsite-header {
+	background-image: url(uploads/1/1/9/7/11974703/header_images/1354234517.jpg) !important;
+	background-position: 0 0 !important;
+}
+</style>
+<script><!--
+var STATIC_BASE = '//cdn1.editmysite.com/';
+var STYLE_PREFIX = 'wsite';
+//-->
+</script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+<script src='http://cdn2.editmysite.com/js/site/main.js?buildTime=1383960324'></script>
+<script type="text/javascript">
+							Weebly = Weebly || {};
+							Weebly.Commerce = Weebly.Commerce || {};
+							Weebly.Commerce.hasCart = false;
+						</script><script type='text/javascript'><!--
+var IS_ARCHIVE=1;
+(function(jQuery){
+function initFlyouts(){initPublishedFlyoutMenus([{"id":"645326618481606677","title":"Electronic Arts","url":"index.html","target":""},{"id":"794474728153112636","title":"There Inc.","url":"there-inc.html","target":""},{"id":"289512948219428322","title":"LucasArts","url":"lucasarts.html","target":""},{"id":"261788549868579697","title":"Scenic","url":"scenic.html","target":""}],"645326618481606677","<li><a href='#'>{{title}}<\/a><\/li>",'active',false)}
+if (jQuery) {
+if (jQuery.browser.msie && !window.flyoutMenusRefreshable) window.onload = initFlyouts;
+else jQuery(initFlyouts);
+}else{
+if (Prototype.Browser.IE) window.onload = initFlyouts;
+else document.observe('dom:loaded', initFlyouts);
+}
+})(window._W && _W.jQuery)
+//-->
+</script>
 </head>
-<body>
-    <script src="http://localhost:5000/javascripts/phormat.js"> </script> <div class="odometer"></div>
+<body class=' tall-header-page wsite-background wsite-theme-light wsite-page-index'>
+<div id="wrapper">
+	<table id="header">
+		<tr>
+			<td id="logo"><span class='wsite-logo'><a href=''><span id="wsite-title">Sean Marr -&nbsp;Digital Artist<br /></span></a></span></td>
+			<td id="header-right">
+				<table>
+					<tr>
+						<td class="phone-number"><span class='wsite-text wsite-phone'>seanpmarr@gmail.com</span></td>
+						<td class="social"><div style="text-align:left;"><div style="height:0px;overflow:hidden"></div>
+<span class="wsite-social wsite-social-default"><a class='first-child wsite-social-item wsite-social-linkedin' href='http://www.linkedin.com/pub/sean-marr/16/18/547' target='_blank'><span class='wsite-social-item-inner'></span></a></span>
+<div style="height:0px;overflow:hidden"></div></div></td>
+					</tr>
+				</table>
+				<div class="search"></div>
+			</td>
+		</tr>
+	</table>
+	<div id="content">
+		<div id="navigation">
+			<ul class='wsite-menu-default'><li id='active'><a href='index.html'>Electronic Arts</a></li><li id='pg794474728153112636'><a href='there-inc.html'>There Inc.</a></li><li id='pg289512948219428322'><a href='lucasarts.html'>LucasArts</a></li><li id='pg261788549868579697'><a href='scenic.html'>Scenic</a></li></ul>
+		</div>
+		<div id="banner">
+			<div class="wsite-header"></div>
+		</div>
+		<div id='wsite-content' class='wsite-elements wsite-not-footer'>
+<div style="text-align:left;"><div style="height: 10px; overflow: hidden;"></div>
+<a class="wsite-button wsite-button-small wsite-button-highlight" href="uploads/1/1/9/7/11974703/sean_marr_resume.doc" >
+<span class="wsite-button-inner">Resume</span>
+</a>
+<div style="height: 10px; overflow: hidden;"></div></div>
+
+<h2 style="text-align:left;">Deadspace 2 - Electronic Arts January 2011</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/4901162.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Multiplayer Environment Artist</font><br /><br /><font size="3">Revamped existing levels and created new content to work with the unique gameplay needs for the Online Multiplayer dynamic of this product. &nbsp;Worked closely with the Level Designers to create Multiplayer friendly versions of the Deadspace 2 levels while at the same time adhering to the art style established by the Deadspace franchise.</font><br /><br /><font size="3">Platforms: PS3, Xbox 360</font><br /></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Trailers</font></h2>
+
+<div><div id="669361415417235234" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="background-color:#000000;width:520px;"><div style="padding:4px;"><iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:e85bba8a-ac90-4ed8-a756-fd117ddd71c9" width="512" height="288" frameborder="0"></iframe></div></div></div>
+
+
+
+</div>
+
+<div><div id="647038877125130404" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="background-color:#000000;width:520px;"><div style="padding:4px;"><iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:a74cba5a-cf04-4815-963b-29a544e8ce8e" width="512" height="288" frameborder="0"></iframe></div></div></div>
+
+
+
+</div>
+
+<h2 style="text-align:left;">Dante's inferno: Trials of St. Lucia - Electronic Arts April 2010</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/4002018.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Environment Artist</font><br /><br /><font size="3">Immediately after the Dante's Inferno title was finalized I began working on the Co-Op expansion pack complete with a simple match editor entitled the "St. Lucia Edition". &nbsp;Responsibilities included reworking existing assets and combining aspects of different levels to create brand new arenas for this expansion pack that was converted into a digital download. &nbsp;Changes to the way the environment was built were also needed to compensate for the wider angle of view due to the new playable flying/hovering character (St. Lucia), new finishing moves, and larger arenas were needed overall for Co-Op combat.</font><br /><br /><font size="3">Platforms: PS3, Xbox 360</font><font size="3"><span style="line-height: 24px;"><br /></span></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Trailers</font></h2>
+
+<div><div id="170375218429648636" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="background-color:#000000;width:520px;"><div style="padding:4px;"><iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:4a8fc865-9e84-4b11-a97a-3555c361d507" width="512" height="288" frameborder="0"></iframe></div></div></div>
+
+
+
+</div>
+
+<div><div id="573477572381120917" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="background-color:#000000;width:520px;"><div style="padding:4px;"><iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:f97fcb94-584c-4464-adfc-54a444adb002" width="512" height="288" frameborder="0"></iframe></div></div></div>
+
+
+
+</div>
+
+<h2 style="text-align:left;"><font size="4">Screenshots</font></h2>
+
+<div><div class="wsite-image wsite-image-border-thin " style="padding-top:10px;padding-bottom:10px;margin-left:0;margin-right:0;text-align:center">
+<a>
+<img src="uploads/1/1/9/7/11974703/3491590_orig.jpg" alt="Picture" style="width:100%;max-width:1100px" />
+</a>
+<div style="display:block;font-size:90%">Violence Woods Arena</div>
+</div></div>
+
+<h2 style="text-align:left;">Dante's Inferno - Electronic Arts February 2010</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/2523917.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="3">Environment Artist<br /><br />Responsibilities included modeling/UV mapping and material creation for a variety of levels and their respective props with a focus on Gluttony and most areas of Limbo,&nbsp;and sections of&nbsp;Heresy, Violence, and the&nbsp;initial Surface level. &nbsp;Worked closely with the Environment Art Lead as well as the Art Director to ensure the art style was consistent and the quality level exceeded expectations.<br /><br />Platforms: PS3, Xbox 360, PSP</font><br /><font size="3">Official Site: &nbsp;<a href="http://www.ea.com/dantes-inferno" target="_blank" title="">http://www.ea.com/dantes-inferno</a></font><font size="3"><span style="line-height: 24px;"><br /></span></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Gameplay Videos</font></h2>
+
+<div><div id="241141343435942626" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><iframe width="512" height="288" src="http://www.youtube.com/embed/M96LhbQp1R8?rel=0" frameborder="0" allowfullscreen></iframe></div>
+
+
+
+</div>
+
+<div><div id="838103846382554927" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><iframe width="512" height="288" src="http://www.youtube.com/embed/kZr6uiawDs8?rel=0" frameborder="0" allowfullscreen></iframe></div>
+
+
+
+</div>
+
+<h2 style="text-align:left;"><font size="4">Screenshots</font></h2>
+
+<div><div class="wsite-image wsite-image-border-thin " style="padding-top:10px;padding-bottom:10px;margin-left:0;margin-right:0;text-align:center">
+<a>
+<img src="uploads/1/1/9/7/11974703/6348751_orig.jpg" alt="Picture" style="width:100%;max-width:1100px" />
+</a>
+<div style="display:block;font-size:90%">Gluttony Environment</div>
+</div></div>
+
+<h2 style="text-align:left;">The Godfather II - Electronic Arts Spring 2009</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/304112.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Lead Vehicle Artist</font><br /><font size="3">Responsible for the multitude of vehicle types for this open-world style game and managed the work of a small team of Artists working abroad as well as a remote Concept Artist. &nbsp;Worked closely with many different disciplines including Engineering and Technical Art to develop and maintain the vehicle pipeline and made sure the variety of vehicles and their moving parts were maximized and within budget. &nbsp;Collaborated with Animators and Character TD's to ensure that the vehicles worked with the new crew dynamic as well as the small set of animations that were budgeted for. &nbsp;Worked with VFX Artists in regards to the vehicle lights and damage/destruction states. &nbsp;Collaborated with multiple Engineers to develop a variety of realistic shaders, a tinting system, and a&nbsp;</font><span style="font-size: medium; ">part/material swapping system for both variety and location specific damage.</span><font size="3">&nbsp;<span>&nbsp;</span>Worked with Art Directors to ensure the look/style of the different vehicles matched the era and complemented the different locations and characters.</font><br /><font size="3"><span style="line-height: 24px;"><br /></span></font><span style="font-size: medium; ">Platforms: PS3, Xbox 360, PC</span><br /><font size="3">Official Site: <a href="http://www.ea.com/the-godfather-2" target="_blank" title="">www.ea.com/the-godfather-2</a></font><font size="3"><span style="line-height: 24px;"><br /></span></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Trailers</font></h2>
+
+<div><div id="275645985704204429" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="background-color:#000000;width:512px;"><div style="padding:0px;"><iframe src="http://media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:73b8562d-9353-4075-89ba-f3372567a108" width="512" height="288" frameborder="0"></iframe></div></div></div>
+
+
+
+</div>
+
+<div><div id="266985904103690196" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="display:none"></div><script language="JavaScript" type="text/javascript" src="http://admin.brightcove.com/js/BrightcoveExperiences.js"></script><object id="myExperience79903523001" class="BrightcoveExperience"> <param name="bgcolor" value="#FFFFFF" /> <param name="width" value="512" /> <param name="height" value="288" /> <param name="playerID" value="1414296339001" /> <param name="playerKey" value="AQ~~,AAAACs5syck~,78rNhQXP3tj4hjTawirVRc_Byr74v1hm" /> <param name="isVid" value="true" /> <param name="isUI" value="true" /> <param name="dynamicStreaming" value="true" /><param name="@videoPlayer" value="79903523001" /></object><script type="text/javascript">brightcove.createExperiences();</script></div>
+
+
+
+</div>
+
+<h2 style="text-align:left;"><font size="4">Screenshots</font></h2>
+
+<div><div style="height: 0px; overflow: hidden;"></div>
+				<div id='565817023113334922-gallery' class='imageGallery' style='line-height: 0px; padding: 0; margin: 0'>
+<div id='565817023113334922-imageContainer0' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer0' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/2832112_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1950&#039;s Sedan dirt variations'><img src='uploads/1/1/9/7/11974703/2832112.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><div id='565817023113334922-imageContainer1' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer1' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/1846336_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1960&#039;s Sedan'><img src='uploads/1/1/9/7/11974703/1846336.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><div id='565817023113334922-imageContainer2' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer2' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/9861634_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1960&#039;s Luxury Sedan'><img src='uploads/1/1/9/7/11974703/9861634.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><div id='565817023113334922-imageContainer3' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer3' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/229370_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1960&#039;s Sports Car'><img src='uploads/1/1/9/7/11974703/229370.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><div id='565817023113334922-imageContainer4' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer4' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/471563_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1960&#039;s Thug Sedan (front)'><img src='uploads/1/1/9/7/11974703/471563.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><div id='565817023113334922-imageContainer5' style='float:left;width:33.28%;margin:0;'><div id='565817023113334922-insideImageContainer5' style='position:relative;margin:1px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75.08%;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/3321518_orig.jpg' rel='lightbox[gallery565817023113334922]' onclick='if (!window.lightboxLoaded) return false' title='1960&#039;s Thug Sedan (rear)'><img src='uploads/1/1/9/7/11974703/3321518.jpg' class='galleryImage' _width='333' _height='187' style='position:absolute;border:0;width:100%;top:12.6%;left:0%' /></a></div></div></div></div><span style='display: block; clear: both; height: 0px; overflow: hidden;'></span>
+</div>
+
+				<div style="height: 0px; overflow: hidden;"></div></div>
+
+<h2 style="text-align:left;">The Godfather (Next Gen) - Electronic Arts Fall 2006 - Spring 2007</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/6676313.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Lead Vehicle Artist</font><br /><br /><font size="3">Responsible for upressing the models/textures of the vehicles from the previous PS2/Xbox version of this title and creating new vehicles as well for the PS3/Wii versions that were released later on in the Spring of 2007. &nbsp;Had to reverse engineer the complex vehicle pipeline and start creating assets in a short amount of time.</font><br /><br /><font size="3">Platforms: &nbsp;Xbox 360, PS3 (Don's Edition), Wii (Blackhand Edition), PC</font><br /><font size="3">Official Site: &nbsp;<a href="http://www.ea.com/the-godfather-the-game" target="_blank" title="">www.ea.com/the-godfather-the-game</a></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Gameplay Videos</font></h2>
+
+<div><div id="584164632658475689" align="left" style="width: 100%; overflow-y: hidden;" class="wcustomhtml"><div style="display:none"></div><script language="JavaScript" type="text/javascript" src="http://admin.brightcove.com/js/BrightcoveExperiences.js"></script><object id="myExperience79903440001" class="BrightcoveExperience"> <param name="bgcolor" value="#FFFFFF" /> <param name="width" value="512" /> <param name="height" value="288" /> <param name="playerID" value="1414296339001" /> <param name="playerKey" value="AQ~~,AAAACs5syck~,78rNhQXP3tj4hjTawirVRc_Byr74v1hm" /> <param name="isVid" value="true" /> <param name="isUI" value="true" /> <param name="dynamicStreaming" value="true" /><param name="@videoPlayer" value="79903440001" /></object><script type="text/javascript">brightcove.createExperiences();</script></div>
+
+
+
+</div>
+
+<h2 style="text-align:left;">The Godfather - Electronic Arts Spring 2006</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/1336018337.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:0;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Environment Artist</font><br /><br /><font size="3">Modeled/textured a variety of assets in the different neighborhoods including interiors, exteriors, and entire buildings/landmarks to recreate the different locations from the film. &nbsp;Worked with the Art Director and Leads to create building facades and texture sets unique to the different locations to keep the game true to the time period and locations portrayed in the film. &nbsp;Worked closely with the Technical Artists to balance variety and framerate by helping to create a system of modular building parts to populate the expansive areas of this open-world game. &nbsp;Specifically owned neighborhoods like Hell's Kitchen and Harlem, as well as the more unique areas of the game such as the train yards and waterfront. &nbsp;Continuously strove to push the level of realism from the smallest of details like building materials used and architectural styles to entire skyscrapers and even entire neighborhoods. &nbsp;</font><span style="font-size: medium; ">Also created a variety of props for both in-game and for the cutscene cinematics.</span><br /><br /><font size="3">Platforms: PS2, Xbox, PC</font><br /><font size="3">Official Site: &nbsp;<a href="http://www.ea.com/the-godfather-the-game" target="_blank" title="">www.ea.com/the-godfather-the-game</a></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Exterior Concepts</font></h2>
+
+<div><div style="height: 20px; overflow: hidden;"></div>
+				<div id='829007923213112472-gallery' class='imageGallery' style='line-height: 0px; padding: 0; margin: 0'>
+<div id='829007923213112472-imageContainer0' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer0' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/1856067_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Law Office exterior'><img src='uploads/1/1/9/7/11974703/1856067.jpg' class='galleryImage' _width='333' _height='183' style='position:absolute;border:0;width:136.48%;top:0%;left:-18.24%' /></a></div></div></div></div><div id='829007923213112472-imageContainer1' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer1' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/9059583_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Bakery exterior'><img src='uploads/1/1/9/7/11974703/9059583.jpg' class='galleryImage' _width='333' _height='183' style='position:absolute;border:0;width:136.48%;top:0%;left:-18.24%' /></a></div></div></div></div><div id='829007923213112472-imageContainer2' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer2' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/7667615_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Grocer exterior'><img src='uploads/1/1/9/7/11974703/7667615.jpg' class='galleryImage' _width='333' _height='157' style='position:absolute;border:0;width:159.08%;top:0%;left:-29.54%' /></a></div></div></div></div><div id='829007923213112472-imageContainer3' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer3' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/1329623_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Apartment Building exterior'><img src='uploads/1/1/9/7/11974703/1329623.jpg' class='galleryImage' _width='333' _height='207' style='position:absolute;border:0;width:120.65%;top:0%;left:-10.33%' /></a></div></div></div></div><div id='829007923213112472-imageContainer4' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer4' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/6052552_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Trading Company exterior'><img src='uploads/1/1/9/7/11974703/6052552.jpg' class='galleryImage' _width='333' _height='83' style='position:absolute;border:0;width:300.9%;top:0%;left:-100.45%' /></a></div></div></div></div><div id='829007923213112472-imageContainer5' style='float:left;width:33.28%;margin:0;'><div id='829007923213112472-insideImageContainer5' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/3945843_orig.jpg' rel='lightbox[gallery829007923213112472]' onclick='if (!window.lightboxLoaded) return false' title='Apartment Building upper floor'><img src='uploads/1/1/9/7/11974703/3945843.jpg' class='galleryImage' _width='333' _height='83' style='position:absolute;border:0;width:300.9%;top:0%;left:-100.45%' /></a></div></div></div></div><span style='display: block; clear: both; height: 0px; overflow: hidden;'></span>
+</div>
+
+				<div style="height: 20px; overflow: hidden;"></div></div>
+
+<h2 style="text-align:left;"><font size="4">Interior Texture Sets</font></h2>
+
+<div><div style="height: 0px; overflow: hidden;"></div>
+				<div id='162279286841100615-gallery' class='imageGallery' style='line-height: 0px; padding: 0; margin: 0'>
+<div id='162279286841100615-imageContainer0' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer0' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/960840_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Florist interior'><img src='uploads/1/1/9/7/11974703/960840.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='162279286841100615-imageContainer1' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer1' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/3099567_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Drug Racket interior'><img src='uploads/1/1/9/7/11974703/3099567.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='162279286841100615-imageContainer2' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer2' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/9778726_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Gambling Racket interior'><img src='uploads/1/1/9/7/11974703/9778726.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='162279286841100615-imageContainer3' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer3' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/4899960_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Pizza Place interior'><img src='uploads/1/1/9/7/11974703/4899960.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='162279286841100615-imageContainer4' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer4' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/5024912_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Gentleman&#039;s Club interior'><img src='uploads/1/1/9/7/11974703/5024912.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='162279286841100615-imageContainer5' style='float:left;width:33.28%;margin:0;'><div id='162279286841100615-insideImageContainer5' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/8942192_orig.jpg' rel='lightbox[gallery162279286841100615]' onclick='if (!window.lightboxLoaded) return false' title='Restaurant interior'><img src='uploads/1/1/9/7/11974703/8942192.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><span style='display: block; clear: both; height: 0px; overflow: hidden;'></span>
+</div>
+
+				<div style="height: 0px; overflow: hidden;"></div></div>
+
+<h2 style="text-align:left;"><font size="4">Weapons</font></h2>
+
+<div><div style="height: 0px; overflow: hidden;"></div>
+				<div id='793530477269184130-gallery' class='imageGallery' style='line-height: 0px; padding: 0; margin: 0'>
+<div id='793530477269184130-imageContainer0' style='float:left;width:33.28%;margin:0;'><div id='793530477269184130-insideImageContainer0' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/7953800_orig.jpg' rel='lightbox[gallery793530477269184130]' onclick='if (!window.lightboxLoaded) return false' title='.38 Snubnose Revolver'><img src='uploads/1/1/9/7/11974703/7953800.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='793530477269184130-imageContainer1' style='float:left;width:33.28%;margin:0;'><div id='793530477269184130-insideImageContainer1' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/7094231_orig.jpg' rel='lightbox[gallery793530477269184130]' onclick='if (!window.lightboxLoaded) return false' title='.38 Special Revolver'><img src='uploads/1/1/9/7/11974703/7094231.jpg' class='galleryImage' _width='266' _height='250' style='position:absolute;border:0;width:100%;top:-12.66%;left:0%' /></a></div></div></div></div><div id='793530477269184130-imageContainer2' style='float:left;width:33.28%;margin:0;'><div id='793530477269184130-insideImageContainer2' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/1492830_orig.jpg' rel='lightbox[gallery793530477269184130]' onclick='if (!window.lightboxLoaded) return false' title='Alternate views of .38 Special Revolver'><img src='uploads/1/1/9/7/11974703/1492830.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><span style='display: block; clear: both; height: 0px; overflow: hidden;'></span>
+</div>
+
+				<div style="height: 10px; overflow: hidden;"></div></div>
+
+<h2 style="text-align:left;">The Lord of the Rings: The Third Age - Electronic Arts Winter 2004</h2>
+<span class='imgPusher' style='float:left;height:0px'></span><span style='position:relative;float:left;z-index:10;;clear:left;margin-top:0px;*margin-top:0px'><a><img class="wsite-image galleryImageBorder" src="uploads/1/1/9/7/11974703/4758564.jpg" style="margin-top: 5px; margin-bottom: 10px; margin-left: 0px; margin-right: 10px; border-width:1px;padding:3px;" alt="Picture" /></a><div style="display: block; font-size: 90%; margin-top: -10px; margin-bottom: 10px; text-align: center;"></div></span>
+<div class="paragraph" style="text-align:left;display:block;"><font size="4">Weapons, Armor, and Props Artist</font><br /><br /><font size="3">Created a variety of weapons and armor for the Character Team and some last minute props needed for the Environment effort for this RPG style game.</font><br /><br /><font size="3">Platforms: &nbsp;PS2, Xbox, GameCube</font><br /><font size="3">Unofficial Site: &nbsp;<a href="http://www.mobygames.com/game/lord-of-the-rings-the-third-age_" target="_blank" title="">www.mobygames.com/game/lord-of-the-rings-the-third-age_</a></font></div>
+<hr style="clear:both;visibility:hidden;width:100%;"></hr>
+
+<h2 style="text-align:left;"><font size="4">Props/</font><span style="line-height: 27px; font-size: large; ">Weapons</span></h2>
+
+<div><div style="height: 0px; overflow: hidden;"></div>
+				<div id='163805723289421478-gallery' class='imageGallery' style='line-height: 0px; padding: 0; margin: 0'>
+<div id='163805723289421478-imageContainer0' style='float:left;width:33.28%;margin:0;'><div id='163805723289421478-insideImageContainer0' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/5860465_orig.jpg' rel='lightbox[gallery163805723289421478]' onclick='if (!window.lightboxLoaded) return false' title='Rohan shields'><img src='uploads/1/1/9/7/11974703/5860465.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='163805723289421478-imageContainer1' style='float:left;width:33.28%;margin:0;'><div id='163805723289421478-insideImageContainer1' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/3286015_orig.jpg' rel='lightbox[gallery163805723289421478]' onclick='if (!window.lightboxLoaded) return false' title='Easterling, Boromir, and Dwarven shields'><img src='uploads/1/1/9/7/11974703/3286015.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><div id='163805723289421478-imageContainer2' style='float:left;width:33.28%;margin:0;'><div id='163805723289421478-insideImageContainer2' style='position:relative;margin:5px;'><div class='galleryImageHolder' style='position:relative; width:100%; padding:0 0 75%;overflow:hidden;'><div class='galleryInnerImageHolder'><a href='uploads/1/1/9/7/11974703/7455475_orig.jpg' rel='lightbox[gallery163805723289421478]' onclick='if (!window.lightboxLoaded) return false' title='Rohan and Elven spears'><img src='uploads/1/1/9/7/11974703/7455475.jpg' class='galleryImage' _width='312' _height='250' style='position:absolute;border:0;width:100%;top:-3.42%;left:0%' /></a></div></div></div></div><span style='display: block; clear: both; height: 0px; overflow: hidden;'></span>
+</div>
+
+				<div style="height: 0px; overflow: hidden;"></div></div></div>
+
+	</div>
+	<div id="footer">Create a <a target="_top" href="http://www.weebly.com/">free web site</a> with <a target="_top" href="http://www.weebly.com/" title="free web site">Weebly</a></div>
+</div>
+
 </body>
 </html>
